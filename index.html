@@ -14,12 +14,37 @@
 
 
 <body>
+     <div class="particles" id="particles"></div>
+    
     <div class="app">
-        <h1>Simple Quiz</h1>
+        <div class="app-header">
+            <h1>🎯 Elite Quiz Platform</h1>
+            <div class="subtitle">Test Your Knowledge</div>
+        </div>
         <div class="quiz">
+            <div class="progress-bar">
+                <div class="progress-fill" id="progress-fill" style="width: 0%"></div>
+            </div>
+
             <h2 id="question">Question goes here</h2>
+
+            <div class="hud">
+                <div class="hud-item" id="score-box">
+                    <span class="hud-label">💎 Score</span>
+                    <span class="hud-value">0</span>
+                </div>
+                <div class="hud-item" id="combo-box">
+                    <span class="hud-label">🔥 Combo</span>
+                    <span class="hud-value">0</span>
+                </div>
+                <div class="hud-item" id="timer-box">
+                    <span class="hud-label">⏱️ Time</span>
+                    <span class="hud-value">10</span>
+                </div>
+            </div>
+
             <div id="answer-buttons"></div>
-            <button id="next-btn">Next</button>
+            <button id="next-btn">Next Question →</button>
         </div>
     </div>
 

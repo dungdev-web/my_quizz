@@ -35,7 +35,10 @@
             0%, 100% { opacity: 0.5; }
             50% { opacity: 0.8; }
         }
-
+.particles {
+  pointer-events: none;
+  z-index: 0;
+}
         .particles {
             position: fixed;
             top: 0;

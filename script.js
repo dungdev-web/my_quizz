@@ -12,22 +12,20 @@ for (let i = 0; i < 20; i++) {
 }
 
 let questions = [];
-const questionElement = document.getElementById("question");
-const answerButtons = document.getElementById("answer-buttons");
-const nextButton = document.getElementById("next-btn");
-const scoreBox = document.getElementById("score-box");
-const timerBox = document.getElementById("timer-box");
-const comboBox = document.getElementById("combo-box");
-const progressFill = document.getElementById("progress-fill");
-let autoNextTimeout = null;
+ const questionElement = document.getElementById("question");
+        const answerButtons = document.getElementById("answer-buttons");
+        const nextButton = document.getElementById("next-btn");
+        const scoreBox = document.getElementById("score-box");
+        const timerBox = document.getElementById("timer-box");
+        const comboBox = document.getElementById("combo-box");
+        const progressFill = document.getElementById("progress-fill");
 
-let timeLeft = 10;
-let timer = null;
-let combo = 0;
-let highScore = 0;
-
-let currentQuestionIndex = 0;
-let score = 0;
+        let timeLeft = 10;
+        let timer = null;
+        let combo = 0;
+        let highScore = parseInt(localStorage.getItem("highScore")) || 0;
+        let currentQuestionIndex = 0;
+        let score = 0;
 fetch("db.json")
   .then((response) => response.json())
   .then((data) => {
@@ -38,137 +36,129 @@ fetch("db.json")
     questionElement.innerHTML = "Failed to load questions 😢";
     console.error("Error loading JSON:", error);
   });
+        function shuffleArray(array) {
+            const newArray = [...array];
+            for (let i = newArray.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [newArray[i], newArray[j]] = [newArray[j], newArray[i]];
+            }
+            return newArray;
+        }
 
-startQuiz();
+        function startQuiz() {
+            currentQuestionIndex = 0;
+            score = 0;
+            combo = 0;
+            updateScore(0);
+            updateCombo(0);
+            updateProgress();
+            nextButton.innerHTML = "Next Question →";
+            showQuestion();
+        }
 
-function startQuiz() {
-  currentQuestionIndex = 0;
-  score = 0;
-  combo = 0;
+        function startTimer() {
+            clearInterval(timer);
+            timeLeft = 10;
+            updateTimer(timeLeft);
 
-  updateScore(0);
-  updateCombo(0);
-  updateProgress();
+            timer = setInterval(() => {
+                timeLeft--;
+                updateTimer(timeLeft);
 
-  nextButton.innerHTML = "Next Question →";
-  showQuestion();
-}
+                if (timeLeft <= 0) {
+                    clearInterval(timer);
+                    autoFail();
+                }
+            }, 1000);
+        }
 
-function startTimer() {
-  clearInterval(timer);
-  timeLeft = 30;
-  updateTimer(timeLeft);
+        function autoFail() {
+            Array.from(answerButtons.children).forEach((button) => {
+                button.disabled = true;
+                if (button.dataset.correct === "true") {
+                    button.classList.add("correct");
+                }
+            });
 
-  timer = setInterval(() => {
-    timeLeft--;
-    updateTimer(timeLeft);
+            combo = 0;
+            updateCombo(0);
+            nextButton.style.display = "block";
+        }
 
-    if (timeLeft <= 0) {
-      clearInterval(timer);
-      autoFail();
-    }
-  }, 1000);
-}
+        function showQuestion() {
+            resetState();
+            startTimer();
+            updateProgress();
+            
+            const currentQuestion = questions[currentQuestionIndex];
+            const questionNo = currentQuestionIndex + 1;
+            questionElement.innerHTML = `${questionNo}. ${currentQuestion.question}`;
 
-function autoFail() {
-  Array.from(answerButtons.children).forEach((button) => {
-    button.disabled = true;
-    if (button.dataset.correct === "true") {
-      button.classList.add("correct");
-    }
-  });
+            const shuffledAnswers = shuffleArray(currentQuestion.answers);
 
-  combo = 0;
-  updateCombo(0);
+            shuffledAnswers.forEach((answer) => {
+                const button = document.createElement("button");
+                button.innerText = answer.text;
+                button.classList.add("btn");
+                if (answer.correct) {
+                    button.dataset.correct = answer.correct;
+                }
+                button.addEventListener("click", selectAnswer);
+                answerButtons.appendChild(button);
+            });
+        }
 
-  nextButton.style.display = "block";
-  autoNextTimeout = setTimeout(handleNextButtonClick, 2000);
-}
+        function resetState() {
+            nextButton.style.display = "none";
+            while (answerButtons.firstChild) {
+                answerButtons.removeChild(answerButtons.firstChild);
+            }
+        }
 
-function shuffleArray(array) {
-  for (let i = array.length - 1; i > 0; i--) {
-    const j = Math.floor(Math.random() * (i + 1));
-    [array[i], array[j]] = [array[j], array[i]];
-  }
-  return array;
-}
+        function selectAnswer(e) {
+            clearInterval(timer);
 
-function showQuestion() {
-  resetState();
-  clearTimeout(autoNextTimeout);
-  startTimer();
-  updateProgress();
+            const selectedButton = e.target;
+            const correct = selectedButton.dataset.correct === "true";
 
-  const currentQuestion = questions[currentQuestionIndex];
-  const questionNo = currentQuestionIndex + 1;
-  questionElement.innerHTML = `<span style="color: rgba(255,255,255,0.5)">Question ${questionNo}/${questions.length}</span><br>${currentQuestion.question}`;
+            if (correct) {
+                combo++;
+                let bonus = combo >= 3 ? 5 : 0;
+                let gained = 10 + bonus;
+                score += gained;
+                
+                selectedButton.classList.add("correct");
+                updateScore(gained);
+                updateCombo(combo);
+            } else {
+                selectedButton.classList.add("incorrect");
+                combo = 0;
+                updateCombo(0);
+            }
 
-  const shuffledAnswers = shuffleArray([...currentQuestion.answers]);
+            Array.from(answerButtons.children).forEach((button) => {
+                button.disabled = true;
+                if (button.dataset.correct === "true") {
+                    button.classList.add("correct");
+                }
+            });
 
-  shuffledAnswers.forEach((answer) => {
-    const button = document.createElement("button");
-    button.innerText = answer.text;
-    button.classList.add("btn");
-    if (answer.correct) {
-      button.dataset.correct = answer.correct;
-    }
-    button.addEventListener("click", selectAnswer);
-    answerButtons.appendChild(button);
-  });
-}
+            nextButton.style.display = "block";
+        }
 
-function resetState() {
-  nextButton.style.display = "none";
-  while (answerButtons.firstChild) {
-    answerButtons.removeChild(answerButtons.firstChild);
-  }
-}
+        function showScore() {
+            resetState();
 
-function selectAnswer(e) {
-  clearInterval(timer);
+            if (score > highScore) {
+                localStorage.setItem("highScore", score);
+                highScore = score;
+            }
 
-  const selectedButton = e.target;
-  const correct = selectedButton.dataset.correct === "true";
-
-  if (correct) {
-    selectedButton.classList.add("correct");
-    combo++;
-    let bonus = combo >= 3 ? 5 : 0;
-    let gained = 10 + bonus;
-
-    score += gained;
-    updateScore(gained);
-    updateCombo(combo);
-  } else {
-    selectedButton.classList.add("incorrect");
-    combo = 0;
-    updateCombo(0);
-  }
-
-  Array.from(answerButtons.children).forEach((button) => {
-    button.disabled = true;
-    if (button.dataset.correct === "true" && button !== selectedButton) {
-      button.classList.add("correct");
-    }
-  });
-
-  nextButton.style.display = "block";
-  autoNextTimeout = setTimeout(handleNextButtonClick, 2000);
-}
-
-function showScore() {
-  resetState();
-  clearInterval(timer);
-
-  if (score > highScore) {
-    highScore = score;
-  }
-
-  const percentage = Math.round((score / (questions.length * 10)) * 100);
-  const circumference = 2 * Math.PI * 60;
-  const offset = circumference - (percentage / 100) * circumference;
-
-  questionElement.innerHTML = `
+            const percentage = Math.round((score / (questions.length * 10)) * 100);
+            const circumference = 2 * Math.PI * 60;
+            const offset = circumference - (percentage / 100) * circumference;
+            
+            questionElement.innerHTML = `
                 <div class="score-screen">
                     <div class="trophy-icon">🏆</div>
                     <h2>Quiz Complete!</h2>
@@ -202,66 +192,66 @@ function showScore() {
                         </div>
                         <div class="score-item">
                             <span class="score-label">✅ Correct Answers</span>
-                            <span class="score-value">${Math.floor(
-                              score / 10
-                            )} / ${questions.length}</span>
+                            <span class="score-value">${Math.floor(score / 10)} / ${questions.length}</span>
                         </div>
                     </div>
                 </div>
             `;
+            
+            timerBox.querySelector(".hud-value").textContent = "—";
+            comboBox.querySelector(".hud-value").textContent = "0";
+            nextButton.innerHTML = "Play Again 🔄";
+            nextButton.style.display = "block";
+        }
 
-  timerBox.querySelector(".hud-value").textContent = "—";
-  comboBox.querySelector(".hud-value").textContent = "0";
+        function handleNextButtonClick() {
+            currentQuestionIndex++;
+            if (currentQuestionIndex < questions.length) {
+                showQuestion();
+            } else {
+                showScore();
+            }
+        }
 
-  nextButton.innerHTML = "🔄 Play Again";
-  nextButton.style.display = "block";
-}
+        nextButton.addEventListener("click", () => {
+            if (currentQuestionIndex < questions.length) {
+                handleNextButtonClick();
+            } else {
+                startQuiz();
+            }
+        });
 
-function handleNextButtonClick() {
-  currentQuestionIndex++;
-  if (currentQuestionIndex < questions.length) {
-    showQuestion();
-  } else {
-    showScore();
-  }
-}
+        function updateScore(gained) {
+            const valueEl = scoreBox.querySelector(".hud-value");
+            if (gained > 0) {
+                valueEl.textContent = `${score} (+${gained})`;
+                setTimeout(() => {
+                    valueEl.textContent = score;
+                }, 1000);
+            } else {
+                valueEl.textContent = score;
+            }
+        }
 
-nextButton.addEventListener("click", () => {
-  clearTimeout(autoNextTimeout);
-  if (currentQuestionIndex < questions.length) {
-    handleNextButtonClick();
-  } else {
-    startQuiz();
-  }
-});
+        function updateCombo(value) {
+            const valueEl = comboBox.querySelector(".hud-value");
+            valueEl.textContent = value;
+            if (value >= 3) {
+                comboBox.style.animation = "none";
+                setTimeout(() => {
+                    comboBox.style.animation = "correctPulse 0.5s ease-out";
+                }, 10);
+            }
+        }
 
-function updateScore(gained) {
-  const valueEl = scoreBox.querySelector(".hud-value");
-  if (gained > 0) {
-    valueEl.textContent = `${score} (+${gained})`;
-    setTimeout(() => {
-      valueEl.textContent = score;
-    }, 1000);
-  } else {
-    valueEl.textContent = score;
-  }
-}
+        function updateTimer(value) {
+            timerBox.querySelector(".hud-value").textContent = value;
+        }
 
-function updateCombo(value) {
-  comboBox.querySelector(".hud-value").textContent = value;
-  if (value >= 3) {
-    comboBox.style.animation = "none";
-    setTimeout(() => {
-      comboBox.style.animation = "correctPulse 0.5s ease-out";
-    }, 10);
-  }
-}
+        function updateProgress() {
+            const progress = (currentQuestionIndex / questions.length) * 100;
+            progressFill.style.width = progress + "%";
+        }
 
-function updateTimer(value) {
-  timerBox.querySelector(".hud-value").textContent = value;
-}
-
-function updateProgress() {
-  const progress = (currentQuestionIndex / questions.length) * 100;
-  progressFill.style.width = progress + "%";
-}
+        // Start quiz when loaded
+        startQuiz();

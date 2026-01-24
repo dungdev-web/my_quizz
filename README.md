@@ -1,86 +1,370 @@
-# QuizMaster
+# 🎯 Quiz Game
 
-QuizMaster là một ứng dụng web đơn giản để tạo và quản lý các câu hỏi trắc nghiệm. Dự án này được phát triển nhằm hỗ trợ các giáo viên và học sinh trong việc tạo ra các bài kiểm tra nhanh chóng và dễ dàng.
+Ứng dụng trắc nghiệm tương tác được xây dựng với HTML, CSS, Tailwind CSS và JavaScript thuần túy, mang đến trải nghiệm học tập thú vị và nhẹ nhàng.
 
-## Tính năng
+![Quiz Game Demo](https://via.placeholder.com/800x400/FF6B6B/FFFFFF?text=Quiz+Game+Screenshot)
 
-- Tạo câu hỏi trắc nghiệm với các lựa chọn đa dạng.
-- Quản lý các bộ câu hỏi (tạo, sửa, xóa).
-- Chấm điểm tự động dựa trên câu trả lời của học sinh.
-- Giao diện người dùng trực quan và dễ sử dụng.
+## ✨ Tính năng
 
-## Công nghệ sử dụng
+- 🎮 Chơi quiz với nhiều chủ đề đa dạng
+- ⏱️ Đếm ngược thời gian cho mỗi câu hỏi
+- 📊 Thống kê kết quả chi tiết
+- 🏆 Bảng xếp hạng người chơi (LocalStorage)
+- 💯 Tính điểm tự động và hiển thị kết quả
+- 📱 Responsive design với Tailwind CSS
+- 🎨 Giao diện đẹp mắt với animations
+- 💾 Lưu trữ dữ liệu với LocalStorage
+- 🔄 Import câu hỏi từ JSON
+- ⚡ Không cần backend, chạy trực tiếp trên trình duyệt
+- 🌙 Dark/Light mode toggle
 
-- **Frontend**: HTML, CSS (Tailwind CSS), JavaScript
-- **Backend**: Node.js, Express
-- **Cơ sở dữ liệu**: MongoDB
-- **Authentication**: JSON Web Tokens (JWT)
+## 🚀 Demo
 
-## Cài đặt
+[Xem demo trực tiếp tại đây](https://your-demo-link.com)
 
-### Yêu cầu hệ thống
+## 🛠️ Công nghệ sử dụng
 
-- Node.js v14 trở lên
-- MongoDB v4.4 trở lên
+- **HTML5** - Cấu trúc trang web
+- **CSS3** - Custom styling và animations
+- **Tailwind CSS** - Utility-first CSS framework
+- **JavaScript (ES6+)** - Logic xử lý game
+- **LocalStorage API** - Lưu trữ dữ liệu
+- **JSON** - Lưu trữ câu hỏi
 
-### Hướng dẫn cài đặt
+## 📦 Cài đặt
 
-1. **Clone repository** về máy của bạn:
+### Yêu cầu
 
-    ```bash
-    git clone https://github.com/your-username/quizmaster.git
-    cd quizmaster
-    ```
+- Trình duyệt web hiện đại (Chrome, Firefox, Safari, Edge)
+- Không cần cài đặt Node.js hay server
 
-2. **Cài đặt các gói cần thiết**:
+### Các bước cài đặt
 
-    ```bash
-    npm install
-    ```
+1. Clone repository về máy:
+```bash
+git clone https://github.com/username/quiz-game.git
+cd quiz-game
+```
 
-3. **Cấu hình biến môi trường**:
+2. Mở file `index.html` bằng trình duyệt:
+```bash
+# Trên macOS
+open index.html
 
-    Tạo tệp `.env` trong thư mục gốc của dự án và thêm các biến môi trường cần thiết:
+# Trên Linux
+xdg-open index.html
 
-    ```bash
-    PORT=3000
-    MONGODB_URI=mongodb://localhost:27017/quizmaster
-    JWT_SECRET=your_jwt_secret
-    ```
+# Trên Windows
+start index.html
 
-4. **Chạy ứng dụng**:
+# Hoặc click đúp vào file index.html
+```
 
-    ```bash
-    npm start
-    ```
+3. Hoặc sử dụng Live Server (VS Code Extension) để chạy:
+```bash
+# Cài đặt Live Server extension trong VS Code
+# Sau đó click chuột phải vào index.html và chọn "Open with Live Server"
+```
 
-    Truy cập ứng dụng tại `http://localhost:3000`.
+## 📁 Cấu trúc thư mục
 
-## Hướng dẫn sử dụng
+```
+quiz-game/
+│
+├── index.html              # Trang chơi quiz
+├── quiz.html               # Trang 
+├── css/
+│
+├── js/
+├── assets/
+│
+└── README.md              # File này
+```
 
-- **Tạo câu hỏi**: Truy cập trang quản lý câu hỏi và thêm câu hỏi mới.
-- **Quản lý bộ câu hỏi**: Bạn có thể chỉnh sửa hoặc xóa các bộ câu hỏi hiện có.
-- **Thực hiện bài kiểm tra**: Học sinh có thể thực hiện bài kiểm tra và nhận kết quả ngay lập tức.
+## 📝 Cấu trúc file questions.json
 
-## Đóng góp
+```json
+{
+  "categories": [
+    {
+      "id": 1,
+      "name": "JavaScript",
+      "questions": [
+        {
+          "id": 1,
+          "question": "JavaScript là gì?",
+          "options": [
+            "Ngôn ngữ lập trình",
+            "Framework",
+            "Library",
+            "Database"
+          ],
+          "correctAnswer": 0,
+          "difficulty": "easy",
+          "points": 10,
+          "timeLimit": 30
+        }
+      ]
+    },
+    {
+      "id": 2,
+      "name": "HTML & CSS",
+      "questions": [...]
+    }
+  ]
+}
+```
 
-Chúng tôi rất hoan nghênh các đóng góp từ cộng đồng. Nếu bạn muốn đóng góp, vui lòng tạo một nhánh mới, thực hiện các thay đổi, và mở một Pull Request. Đừng quên kiểm tra lại mã của bạn trước khi gửi Pull Request.
+## 💻 Sử dụng
 
-### Các bước đóng góp:
+### Người chơi
 
-1. Fork repository này.
-2. Tạo một nhánh mới (`git checkout -b feature/ten-chuc-nang`).
-3. Commit các thay đổi (`git commit -am 'Thêm chức năng X'`).
-4. Push lên nhánh mới (`git push origin feature/ten-chuc-nang`).
-5. Mở Pull Request.
+1. **Trang chủ**: Nhập tên và chọn chủ đề quiz
+2. **Chọn độ khó**: Easy, Medium, hoặc Hard
+3. **Bắt đầu chơi**: Click "Start Quiz"
+4. **Trả lời câu hỏi**: 
+   - Chọn đáp án trong thời gian quy định
+   - Timer sẽ đếm ngược cho mỗi câu
+   - Không thể quay lại câu hỏi đã trả lời
+5. **Xem kết quả**: 
+   - Điểm số tổng cộng
+   - Số câu đúng/sai
+   - Đáp án đúng cho từng câu
+6. **Bảng xếp hạng**: Xem và so sánh điểm với người chơi khác
 
-## License
+### Thêm câu hỏi mới
 
-Dự án này được cấp phép theo MIT License - xem tệp [LICENSE](LICENSE) để biết thêm chi tiết.
+Chỉnh sửa file `data/questions.json`:
 
-## Liên hệ
+```json
+{
+  "id": 2,
+  "question": "Câu hỏi của bạn?",
+  "options": [
+    "Đáp án A",
+    "Đáp án B", 
+    "Đáp án C",
+    "Đáp án D"
+  ],
+  "correctAnswer": 1,
+  "difficulty": "medium",
+  "points": 20,
+  "timeLimit": 45
+}
+```
 
-Nếu bạn có bất kỳ câu hỏi hoặc phản hồi nào, vui lòng liên hệ qua email [dungldps41484@gmail.com](mailto:dungldps41484@gmail.com).
+## 🎨 Tailwind CSS Classes chính
+
+### Layout
+```html
+<!-- Container -->
+<div class="container mx-auto px-4">
+
+<!-- Card -->
+<div class="bg-white rounded-lg shadow-lg p-6">
+
+<!-- Grid -->
+<div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+```
+
+### Buttons
+```html
+<!-- Primary Button -->
+<button class="bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded">
+
+<!-- Answer Option -->
+<button class="w-full text-left p-4 rounded-lg border-2 hover:border-blue-500 transition">
+```
+
+### Colors & Themes
+```html
+<!-- Correct Answer -->
+<div class="bg-green-100 border-green-500">
+
+<!-- Wrong Answer -->
+<div class="bg-red-100 border-red-500">
+
+<!-- Dark Mode -->
+<div class="bg-gray-900 text-white">
+```
+
+## ⚙️ Cấu hình
+
+### Thay đổi thời gian
+Trong `js/quiz.js`:
+```javascript
+const DEFAULT_TIME_LIMIT = 30; // seconds
+const EASY_TIME = 45;
+const MEDIUM_TIME = 30;
+const HARD_TIME = 20;
+```
+
+### Thay đổi điểm số
+Trong `data/questions.json`:
+```json
+{
+  "difficulty": "easy",
+  "points": 10  // Thay đổi điểm
+}
+```
+
+### Bật/tắt âm thanh
+Trong `js/app.js`:
+```javascript
+const SOUND_ENABLED = true; // true/false
+```
+
+## 🎯 Game Flow
+
+```
+┌─────────────┐
+│  Home Page  │
+│ (index.html)│
+└──────┬──────┘
+       │
+       ▼
+┌─────────────┐
+│Select Quiz  │
+│& Difficulty │
+└──────┬──────┘
+       │
+       ▼
+┌─────────────┐
+│  Quiz Page  │
+│ (quiz.html) │
+│             │
+│ Questions   │
+│ Timer       │
+│ Progress    │
+└──────┬──────┘
+       │
+       ▼
+┌─────────────┐
+│Results Page │
+│(results.html)│
+│             │
+│ Score       │
+│ Answers     │
+└──────┬──────┘
+       │
+       ▼
+┌─────────────┐
+│Leaderboard  │
+│(leader..html)│
+└─────────────┘
+```
+
+## 🌟 Tính năng nâng cao (Optional)
+
+- ⚡ Animations với CSS/Tailwind
+- 🎵 Âm thanh khi đúng/sai
+- 🌙 Dark mode toggle
+- 📧 Share kết quả qua social media
+- 💾 Export/Import câu hỏi
+- 🔔 Notifications
+- 🏅 Achievement badges
+- 📈 Biểu đồ tiến trình
+
+## 🎨 Customization
+
+### Đổi màu chủ đạo
+Trong `tailwind.config.js` (nếu dùng):
+```javascript
+module.exports = {
+  theme: {
+    extend: {
+      colors: {
+        primary: '#3B82F6',
+        secondary: '#10B981',
+      }
+    }
+  }
+}
+```
+
+### Thêm font chữ
+Trong `index.html`:
+```html
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+```
+
+## 🚀 Deployment
+
+### GitHub Pages
+1. Push code lên GitHub
+2. Settings → Pages → Source: main branch
+3. Đợi vài phút và truy cập: `https://username.github.io/quiz-game`
+
+### Netlify
+1. Kéo thả folder vào Netlify Drop
+2. Hoặc connect với GitHub repo
+3. Deploy tự động
+
+### Vercel
+```bash
+npm i -g vercel
+vercel
+```
+
+## 🤝 Đóng góp
+
+Mọi đóng góp đều được chào đón!
+
+1. Fork repository
+2. Tạo branch mới (`git checkout -b feature/NewFeature`)
+3. Commit thay đổi (`git commit -m 'Add NewFeature'`)
+4. Push lên branch (`git push origin feature/NewFeature`)
+5. Tạo Pull Request
+
+## 🐛 Troubleshooting
+
+**LocalStorage không hoạt động?**
+- Kiểm tra browser có bật LocalStorage
+- Chạy qua HTTP/HTTPS, không file://
+
+**Tailwind classes không hoạt động?**
+- Kiểm tra CDN link trong `<head>`
+- Hoặc build Tailwind nếu dùng custom config
+
+**JSON không load được?**
+- Dùng Live Server hoặc HTTP server
+- Không chạy trực tiếp file:// với Chrome
+
+## 📝 License
+
+Project này được phân phối dưới giấy phép MIT.
+
+## 👤 Tác giả
+
+**Your Name**
+
+- GitHub: [@username](https://github.com/username)
+- Email: your.email@example.com
+- Portfolio: [your-portfolio.com](https://your-portfolio.com)
+
+## 🙏 Lời cảm ơn
+
+- [Tailwind CSS](https://tailwindcss.com/)
+- [Open Trivia Database](https://opentdb.com/)
+- [Font Awesome](https://fontawesome.com/)
+- [Google Fonts](https://fonts.google.com/)
+
+## 📸 Screenshots
+
+### Home Page
+![Home](https://via.placeholder.com/800x400)
+
+### Quiz Page
+![Quiz](https://via.placeholder.com/800x400)
+
+### Results Page
+![Results](https://via.placeholder.com/800x400)
+
+### Leaderboard
+![Leaderboard](https://via.placeholder.com/800x400)
 
 ---
 
+⭐ Nếu bạn thấy project thú vị, đừng quên cho một star nhé! ⭐
+
+🎮 Happy Quizzing! 🎮
